@@ -49,7 +49,7 @@ router.get('/states/:abbr/edit', requireAdmin, (req, res) => {
 
 router.post('/states/:abbr', requireAdmin, (req, res) => {
   const abbr = req.params.abbr.toUpperCase();
-  const { capital, population, cities, universities, schools, neighborhoods, attractions, borderNorth, borderSouth, borderEast, borderWest, flagUrl, governor, senators, capitalMayor } = req.body;
+  const { capital, population, areaSqMi, cities, universities, schools, neighborhoods, attractions, borderNorth, borderSouth, borderEast, borderWest, flagUrl, governor, senators, capitalMayor } = req.body;
 
   const citiesArr = cities.split('\n').map(s => s.trim()).filter(Boolean);
   const unisArr = universities.split('\n').map(s => s.trim()).filter(Boolean);
@@ -60,9 +60,9 @@ router.post('/states/:abbr', requireAdmin, (req, res) => {
   const bordersObj = { north: borderNorth.trim(), south: borderSouth.trim(), east: borderEast.trim(), west: borderWest.trim() };
 
   req.db.prepare(`
-    UPDATE states SET capital = ?, population = ?, cities = ?, universities = ?, schools = ?, neighborhoods = ?, borders = ?, attractions = ?, flag_url = ?, governor = ?, senators = ?, capital_mayor = ?, updated_at = CURRENT_TIMESTAMP
+    UPDATE states SET capital = ?, population = ?, area_sq_mi = ?, cities = ?, universities = ?, schools = ?, neighborhoods = ?, borders = ?, attractions = ?, flag_url = ?, governor = ?, senators = ?, capital_mayor = ?, updated_at = CURRENT_TIMESTAMP
     WHERE abbr = ?
-  `).run(capital, parseInt(population, 10), JSON.stringify(citiesArr), JSON.stringify(unisArr), JSON.stringify(schoolsArr), JSON.stringify(neighArr), JSON.stringify(bordersObj), JSON.stringify(attractionsArr), flagUrl.trim(), governor.trim(), JSON.stringify(senatorsArr), capitalMayor.trim(), abbr);
+  `).run(capital, parseInt(population, 10), parseInt(areaSqMi, 10), JSON.stringify(citiesArr), JSON.stringify(unisArr), JSON.stringify(schoolsArr), JSON.stringify(neighArr), JSON.stringify(bordersObj), JSON.stringify(attractionsArr), flagUrl.trim(), governor.trim(), JSON.stringify(senatorsArr), capitalMayor.trim(), abbr);
 
   const state = req.db.prepare('SELECT * FROM states WHERE abbr = ?').get(abbr);
   state.cities = JSON.parse(state.cities);

@@ -55,6 +55,7 @@
           <h3><%= s.name %> <span class="region-tag">(<%= s.region %>)</span></h3>
           <div class="card-meta">
             <span>Capital: <%= s.capital %></span>
+            <% if (s.areaFormatted) { %><span>Area: <%= s.areaFormatted %> sq mi</span><% } %>
             <span class="population-tag"><%= s.popFormatted %></span>
           </div>
         </div>

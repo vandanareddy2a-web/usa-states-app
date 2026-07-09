@@ -12,7 +12,8 @@ router.get('/', (req, res) => {
     borders: JSON.parse(s.borders),
     attractions: JSON.parse(s.attractions),
     senators: JSON.parse(s.senators),
-    popFormatted: s.population.toLocaleString('en-US')
+    popFormatted: s.population.toLocaleString('en-US'),
+    areaFormatted: s.area_sq_mi ? s.area_sq_mi.toLocaleString('en-US') : null
   }));
   const totalPop = states.reduce((sum, s) => sum + s.population, 0);
   res.render('index', { states: parsed, totalPop });
