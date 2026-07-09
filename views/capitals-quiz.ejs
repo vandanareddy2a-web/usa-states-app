@@ -106,52 +106,51 @@
     .stat-badge .pm-num { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; line-height: 1; }
     .stat-badge .pm-label { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .14em; margin-top: .15rem; }
 
-    /* ---------- Legend ---------- */
-    .legend {
+    /* ---------- Mode grid (tile nav) ---------- */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+      gap: .6rem;
+      margin-bottom: 1.4rem;
+    }
+    .mode-tile {
+      aspect-ratio: 1 / 1;
       display: flex;
-      flex-wrap: wrap;
-      gap: .4rem .9rem;
-      margin: 0 0 1.1rem;
-      padding: .55rem .9rem;
-      background: var(--paper-2);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-    }
-    .legend-item { display: flex; align-items: center; gap: .4rem; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-soft); }
-    .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-
-    /* ---------- Tabs ---------- */
-    .tabs { display: flex; gap: .5rem; margin-bottom: 1.1rem; }
-    .tab-stub {
-      font-family: var(--font-display);
-      font-size: .82rem;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      padding: .6rem 1.3rem .5rem;
-      background: var(--paper-2);
-      color: var(--ink-soft);
-      border: 1px solid var(--line);
-      border-bottom: none;
-      border-radius: var(--radius) var(--radius) 0 0;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .35rem;
+      background: color-mix(in srgb, var(--tile-color, var(--rust)) 16%, var(--paper));
+      border: 2px dashed color-mix(in srgb, var(--tile-color, var(--rust)) 70%, var(--ink-faint));
+      border-radius: 10px;
       cursor: pointer;
-      position: relative;
-      top: 1px;
+      padding: .5rem;
+      box-shadow: 0 4px 0 -1px var(--paper-shadow);
     }
-    .tab-stub::after {
-      content: "";
-      position: absolute;
-      left: 10%; right: 10%; bottom: -4px;
-      height: 4px;
-      background: repeating-linear-gradient(90deg, transparent 0 4px, var(--desk) 4px 5px);
+    .mode-tile svg { width: 26px; height: 26px; color: var(--tile-color, var(--rust-ink)); }
+    .mode-tile .mode-label {
+      font-family: var(--font-display);
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-align: center;
+      line-height: 1.15;
     }
-    .tab-stub.active { background: var(--paper); color: var(--rust-ink); font-weight: 700; border-color: var(--line); }
-    .tab-stub:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
+    .mode-tile.active {
+      background: var(--tile-color, var(--rust));
+      border-style: solid;
+    }
+    .mode-tile.active svg, .mode-tile.active .mode-label { color: var(--paper); }
+    .mode-tile:hover { transform: translateY(-2px); }
+    .mode-tile:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
 
     /* ---------- Stage ---------- */
     .stage {
       background: var(--paper);
       border: 1px solid var(--line);
-      border-radius: 0 var(--radius) var(--radius) var(--radius);
+      border-radius: var(--radius);
       box-shadow: 0 18px 34px -22px rgba(0,0,0,.45), 0 1px 0 var(--paper-shadow) inset;
       padding: 1.6rem 1.6rem 1.8rem;
     }
@@ -338,13 +337,7 @@
         </div>
       </header>
 
-      <div class="legend" id="legend"></div>
-
-      <nav class="tabs">
-        <button class="tab-stub active" id="tabQuiz" aria-selected="true">Quiz</button>
-        <button class="tab-stub" id="tabExplore" aria-selected="false">Explore</button>
-        <button class="tab-stub" id="tabMap" aria-selected="false">Map</button>
-      </nav>
+      <nav class="mode-grid" id="modeGrid" aria-label="Pick a game mode or region"></nav>
 
       <main>
         <section id="quizView" class="stage">
@@ -466,7 +459,8 @@
         mountain: '<path d="M2 19l7-11 4 6 2-3 7 8z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 12l1.3 1.7L12 11" stroke="currentColor" stroke-width="1.1" fill="none" stroke-linejoin="round"/>',
         cactus: '<path d="M12 21V9a2 2 0 1 1 4 0v2M12 13H9a2 2 0 0 1-2-2V8M12 21H9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17" cy="6" r="1.6" fill="currentColor"/>',
         wave: '<path d="M2 10c2-2 4-2 6 0s4 2 6 0 4-2 6 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M2 15c2-2 4-2 6 0s4 2 6 0 4-2 6 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
-        stamp: '<path d="M5 5h14v14H5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2 1.6"/><path d="M9 13l2 2 4-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>'
+        stamp: '<path d="M5 5h14v14H5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2 1.6"/><path d="M9 13l2 2 4-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
+        compass: '<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M15.5 8.5l-2.2 5-5 2.2 2.2-5z" fill="currentColor"/><circle cx="12" cy="12" r="1.1" fill="currentColor"/>'
       }[name] || "";
       return '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' + body + '</svg>';
     }
@@ -511,15 +505,6 @@
       var pct = (totalMastered() / STATES.length) * 100;
       document.getElementById("planeMarker").style.left = pct + "%";
     }
-
-    /* ---------------- Legend ---------------- */
-    var legendEl = document.getElementById("legend");
-    REGIONS.forEach(function (r) {
-      var item = document.createElement("span");
-      item.className = "legend-item";
-      item.innerHTML = '<span class="legend-dot" style="background:var(' + r.varName + ')"></span>' + r.label;
-      legendEl.appendChild(item);
-    });
 
     /* ---------------- Quiz ---------------- */
     var reverse = false;
@@ -624,6 +609,7 @@
         var states = STATES.filter(function (s) { return s.region === region.key; });
         var block = document.createElement("div");
         block.className = "region-block";
+        block.dataset.region = region.key;
         block.style.setProperty("--region-color", "var(" + region.varName + ")");
 
         var head = document.createElement("div");
@@ -727,39 +713,63 @@
       });
     }
 
-    function goToStateOnMap(abbr) {
-      tabExplore.click();
+    /* ---------------- Mode grid (tile nav) ---------------- */
+    var quizView = document.getElementById("quizView");
+    var modeGrid = document.getElementById("modeGrid");
+
+    function setActiveTile(id) {
+      modeGrid.querySelectorAll(".mode-tile").forEach(function (t) { t.classList.toggle("active", t.id === id); });
+    }
+
+    function showQuiz() {
+      quizView.hidden = false; exploreView.hidden = true; mapView.hidden = true;
+      setActiveTile("tileQuiz");
+    }
+    function showMap() {
+      quizView.hidden = true; exploreView.hidden = true; mapView.hidden = false;
+      if (!mapBuilt) { buildMap(); mapBuilt = true; }
+      setActiveTile("tileMap");
+    }
+    function showExplore() {
+      quizView.hidden = true; exploreView.hidden = false; mapView.hidden = true;
       if (!exploreBuilt) { buildExplore(); exploreBuilt = true; }
+      setActiveTile(null);
+    }
+
+    function goToRegion(key) {
+      showExplore();
+      var block = exploreView.querySelector('.region-block[data-region="' + key + '"]');
+      if (block) block.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function goToStateOnMap(abbr) {
+      showExplore();
       flipAndScrollTo(abbr);
     }
 
-    /* ---------------- Tabs ---------------- */
-    var tabQuiz = document.getElementById("tabQuiz");
-    var tabExplore = document.getElementById("tabExplore");
-    var tabMap = document.getElementById("tabMap");
-    var quizView = document.getElementById("quizView");
+    function buildModeGrid() {
+      var items = [
+        {kind: "quiz", id: "tileQuiz", label: "Quiz", icon: "stamp", varName: "--rust"},
+        {kind: "map", id: "tileMap", label: "Map", icon: "compass", varName: "--forest"}
+      ].concat(REGIONS.map(function (r) {
+        return {kind: "region", key: r.key, label: r.label, icon: r.icon, varName: r.varName};
+      }));
 
-    function activate(tab) {
-      [tabQuiz, tabExplore, tabMap].forEach(function (t) {
-        var isActive = t === tab;
-        t.classList.toggle("active", isActive);
-        t.setAttribute("aria-selected", isActive ? "true" : "false");
+      items.forEach(function (item) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "mode-tile" + (item.kind === "quiz" ? " active" : "");
+        if (item.id) btn.id = item.id;
+        btn.style.setProperty("--tile-color", "var(" + item.varName + ")");
+        btn.innerHTML = icon(item.icon) + '<span class="mode-label">' + item.label + "</span>";
+        if (item.kind === "quiz") btn.addEventListener("click", showQuiz);
+        else if (item.kind === "map") btn.addEventListener("click", showMap);
+        else btn.addEventListener("click", function () { goToRegion(item.key); });
+        modeGrid.appendChild(btn);
       });
-      quizView.hidden = tab !== tabQuiz;
-      exploreView.hidden = tab !== tabExplore;
-      mapView.hidden = tab !== tabMap;
     }
 
-    tabQuiz.addEventListener("click", function () { activate(tabQuiz); });
-    tabExplore.addEventListener("click", function () {
-      activate(tabExplore);
-      if (!exploreBuilt) { buildExplore(); exploreBuilt = true; }
-    });
-    tabMap.addEventListener("click", function () {
-      activate(tabMap);
-      if (!mapBuilt) { buildMap(); mapBuilt = true; }
-    });
-
+    buildModeGrid();
     updateStatBar();
     renderQuestion();
   })();
