@@ -19,4 +19,8 @@ router.get('/', (req, res) => {
   res.render('index', { states: parsed, totalPop });
 });
 
+router.get('/capitals-quiz', (req, res) => {
+  res.render('capitals-quiz');
+});
+
 module.exports = router;
