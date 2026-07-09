@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit <%= state.name %> - USA States Admin</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <%- include('../layout') %>
+
+  <div class="edit-container">
+    <div class="edit-header">
+      <a href="/admin" class="back-link">&larr;</a>
+      <h1>Edit <%= state.name %> (<%= state.abbr %>)</h1>
+    </div>
+
+    <% if (success) { %>
+      <div class="alert alert-success"><%= success %></div>
+    <% } %>
+
+    <form method="POST" action="/admin/states/<%= state.abbr %>" class="edit-form">
+      <div class="form-group">
+        <label for="flagUrl">Flag Image URL</label>
+        <div style="display:flex; gap:0.75rem; align-items:center;">
+          <img src="<%= state.flag_url %>" alt="Flag of <%= state.name %>" style="width:56px;height:37px;object-fit:cover;border-radius:4px;border:1px solid var(--border);flex-shrink:0;">
+          <input type="text" id="flagUrl" name="flagUrl" value="<%= state.flag_url %>" required style="flex:1;">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="capital">Capital</label>
+          <input type="text" id="capital" name="capital" value="<%= state.capital %>" required>
+        </div>
+        <div class="form-group">
+          <label for="population">Population</label>
+          <input type="number" id="population" name="population" value="<%= state.population %>" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="cities">Major Cities</label>
+        <textarea id="cities" name="cities" rows="4"><%= state.cities.join('\n') %></textarea>
+        <p class="form-help">One city per line</p>
+      </div>
+
+      <div class="form-group">
+        <label for="universities">Top Universities</label>
+        <textarea id="universities" name="universities" rows="4"><%= state.universities.join('\n') %></textarea>
+        <p class="form-help">One university per line</p>
+      </div>
+
+      <div class="form-group">
+        <label for="schools">Top Schools</label>
+        <textarea id="schools" name="schools" rows="3"><%= state.schools.join('\n') %></textarea>
+        <p class="form-help">One school per line</p>
+      </div>
+
+      <div class="form-group">
+        <label for="neighborhoods">Top Neighborhoods</label>
+        <textarea id="neighborhoods" name="neighborhoods" rows="3"><%= state.neighborhoods.join('\n') %></textarea>
+        <p class="form-help">One neighborhood per line</p>
+      </div>
+
+      <div class="form-group">
+        <label for="attractions">Top Attractions</label>
+        <textarea id="attractions" name="attractions" rows="3"><%= state.attractions.join('\n') %></textarea>
+        <p class="form-help">One attraction per line</p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="governor">Governor</label>
+          <input type="text" id="governor" name="governor" value="<%= state.governor %>" required>
+        </div>
+        <div class="form-group">
+          <label for="capitalMayor">Mayor of <%= state.capital %></label>
+          <input type="text" id="capitalMayor" name="capitalMayor" value="<%= state.capital_mayor %>" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="senators">U.S. Senators</label>
+        <textarea id="senators" name="senators" rows="2"><%= state.senators.join('\n') %></textarea>
+        <p class="form-help">One senator per line</p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="borderNorth">Border &ndash; North</label>
+          <input type="text" id="borderNorth" name="borderNorth" value="<%= state.borders.north %>" required>
+        </div>
+        <div class="form-group">
+          <label for="borderSouth">Border &ndash; South</label>
+          <input type="text" id="borderSouth" name="borderSouth" value="<%= state.borders.south %>" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="borderEast">Border &ndash; East</label>
+          <input type="text" id="borderEast" name="borderEast" value="<%= state.borders.east %>" required>
+        </div>
+        <div class="form-group">
+          <label for="borderWest">Border &ndash; West</label>
+          <input type="text" id="borderWest" name="borderWest" value="<%= state.borders.west %>" required>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="/admin" class="btn btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,106 @@
+const Database = require('better-sqlite3');
+const path = require('path');
+
+const dbPath = path.join(__dirname, 'states.db');
+const db = new Database(dbPath);
+
+db.pragma('journal_mode = WAL');
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS states (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    abbr TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    capital TEXT NOT NULL,
+    population INTEGER NOT NULL,
+    cities TEXT NOT NULL,
+    universities TEXT NOT NULL,
+    schools TEXT NOT NULL,
+    neighborhoods TEXT NOT NULL,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
+const SEED = [
+  {abbr:"AL",name:"Alabama",capital:"Montgomery",population:5157699,cities:["Huntsville","Birmingham","Mobile","Montgomery"],universities:["Auburn University","University of Alabama","UAB","Alabama A&M University"],schools:["Alabama School of Mathematics and Science (Mobile)","Loveless Academic Magnet Program (Montgomery)","Bob Jones High School (Madison)"],neighborhoods:["Mountain Brook (Birmingham metro)","Vestavia Hills (Birmingham metro)","Hoover (Birmingham metro)"]},
+  {abbr:"AK",name:"Alaska",capital:"Juneau",population:733583,cities:["Anchorage","Fairbanks","Juneau","Sitka"],universities:["University of Alaska Anchorage","University of Alaska Fairbanks"],schools:["South Anchorage High","West Anchorage High","Lathrop High School"],neighborhoods:["Downtown Anchorage","South Addition, Anchorage","Mendenhall Valley, Juneau"]},
+  {abbr:"AZ",name:"Arizona",capital:"Phoenix",population:7431344,cities:["Phoenix","Tucson","Mesa","Scottsdale"],universities:["Arizona State University","University of Arizona","Northern Arizona University"],schools:["BASIS Scottsdale","Hamilton High School","Chaparral High School"],neighborhoods:["Arcadia, Phoenix","Catalina Foothills, Tucson","Old Town Scottsdale"]},
+  {abbr:"AR",name:"Arkansas",capital:"Little Rock",population:3067732,cities:["Little Rock","Fort Smith","Fayetteville","Springdale"],universities:["University of Arkansas","Hendrix College","University of Central Arkansas"],schools:["Haas Hall Academy","Bentonville High School","Central High School"],neighborhoods:["Hillcrest, Little Rock","Heights, Little Rock","Downtown Fayetteville"]},
+  {abbr:"CA",name:"California",capital:"Sacramento",population:39029342,cities:["Los Angeles","San Francisco","San Diego","San Jose"],universities:["Stanford University","Caltech","UC Berkeley","UCLA"],schools:["Lowell High School","Basis Independent Silicon Valley","Whitney High School"],neighborhoods:["Pacific Heights, San Francisco","Beverly Hills, Los Angeles","La Jolla, San Diego"]},
+  {abbr:"CO",name:"Colorado",capital:"Denver",population:5877610,cities:["Denver","Colorado Springs","Aurora","Fort Collins"],universities:["University of Colorado Boulder","Colorado School of Mines","Colorado State University"],schools:["Cherry Creek High School","Fairview High School","Cheyenne Mountain High School"],neighborhoods:["Cherry Creek, Denver","LoDo, Denver","Old Colorado City, Colorado Springs"]},
+  {abbr:"CT",name:"Connecticut",capital:"Hartford",population:3626205,cities:["Bridgeport","Stamford","New Haven","Hartford"],universities:["Yale University","University of Connecticut","Wesleyan University","Fairfield University"],schools:["Staples High School (Westport)","New Canaan High School","Darien High School"],neighborhoods:["Riverside (Greenwich)","Old Greenwich (Greenwich)","Belle Haven (Greenwich)"]},
+  {abbr:"DE",name:"Delaware",capital:"Dover",population:1051917,cities:["Wilmington","Dover","Newark","Middletown"],universities:["University of Delaware","Delaware State University","Wilmington University"],schools:["Charter School of Wilmington","Newark Charter School","Cab Calloway School of the Arts"],neighborhoods:["Greenville (Wilmington area)","Trolley Square, Wilmington","Rehoboth Beach"]},
+  {abbr:"FL",name:"Florida",capital:"Tallahassee",population:22610726,cities:["Miami","Tampa","Orlando","Jacksonville"],universities:["University of Florida","University of Miami","Florida State University"],schools:["Pine View School","Stanton College Prep","Suncoast High School"],neighborhoods:["Coral Gables, Miami","Hyde Park, Tampa","Winter Park, Orlando"]},
+  {abbr:"GA",name:"Georgia",capital:"Atlanta",population:11029227,cities:["Atlanta","Savannah","Augusta","Columbus"],universities:["Georgia Tech","Emory University","University of Georgia"],schools:["Gwinnett School of Mathematics","Northview High School","Walton High School"],neighborhoods:["Buckhead, Atlanta","Midtown, Atlanta","Historic District, Savannah"]},
+  {abbr:"HI",name:"Hawaii",capital:"Honolulu",population:1440196,cities:["Honolulu","Hilo","Kailua","Kapolei"],universities:["University of Hawaii at Manoa","Hawaii Pacific University","Chaminade University"],schools:["Punahou School","Iolani School","Mid-Pacific Institute"],neighborhoods:["Kahala, Honolulu","Kailua Beach, Oahu","Waikiki, Honolulu"]},
+  {abbr:"ID",name:"Idaho",capital:"Boise",population:1964726,cities:["Boise","Meridian","Nampa","Idaho Falls"],universities:["Boise State University","University of Idaho","Idaho State University"],schools:["Boise High School","Timberline High School","Idaho Falls High School"],neighborhoods:["North End, Boise","Eagle","Hyde Park, Boise"]},
+  {abbr:"IL",name:"Illinois",capital:"Springfield",population:12582032,cities:["Chicago","Aurora","Naperville","Rockford"],universities:["University of Chicago","Northwestern University","UIUC"],schools:["Northside College Prep","New Trier High School","Stevenson High School"],neighborhoods:["Lincoln Park, Chicago","Gold Coast, Chicago","Naperville Downtown"]},
+  {abbr:"IN",name:"Indiana",capital:"Indianapolis",population:6862199,cities:["Indianapolis","Fort Wayne","Evansville","South Bend"],universities:["Purdue University","Indiana University","University of Notre Dame"],schools:["Carmel High School","Signature School","Zionsville High School"],neighborhoods:["Broad Ripple, Indianapolis","Carmel Arts District","Mass Ave, Indianapolis"]},
+  {abbr:"IA",name:"Iowa",capital:"Des Moines",population:3200517,cities:["Des Moines","Cedar Rapids","Davenport","Iowa City"],universities:["University of Iowa","Iowa State University","Grinnell College"],schools:["Iowa City West High","Ames High School","Johnston High School"],neighborhoods:["East Village, Des Moines","Iowa City Downtown","Czech Village, Cedar Rapids"]},
+  {abbr:"KS",name:"Kansas",capital:"Topeka",population:2940546,cities:["Wichita","Overland Park","Kansas City","Topeka"],universities:["University of Kansas","Kansas State University","Wichita State University"],schools:["Blue Valley North High","Shawnee Mission East","Manhattan High School"],neighborhoods:["Country Club, Kansas City","College Hill, Wichita","Downtown Lawrence"]},
+  {abbr:"KY",name:"Kentucky",capital:"Frankfort",population:4588372,cities:["Louisville","Lexington","Bowling Green","Owensboro"],universities:["University of Kentucky","University of Louisville","Centre College","Berea College"],schools:["DuPont Manual High School (Louisville)","Gatton Academy of Math & Science (Bowling Green)","Paul Laurence Dunbar High (Lexington)"],neighborhoods:["Chevy Chase, Lexington","The Highlands, Louisville","Palomar, Lexington"]},
+  {abbr:"LA",name:"Louisiana",capital:"Baton Rouge",population:4590241,cities:["New Orleans","Baton Rouge","Shreveport","Lafayette"],universities:["Tulane University","LSU","Loyola University New Orleans"],schools:["Benjamin Franklin High","Baton Rouge Magnet High","Caddo Magnet High"],neighborhoods:["Garden District, New Orleans","French Quarter, New Orleans","Mid-City, Baton Rouge"]},
+  {abbr:"ME",name:"Maine",capital:"Augusta",population:1421310,cities:["Portland","Bangor","South Portland","Auburn"],universities:["Bowdoin College","Colby College","Bates College","University of Maine"],schools:["Maine School of Science & Mathematics","Cape Elizabeth High School","Falmouth High School"],neighborhoods:["Munjoy Hill, Portland","Cape Elizabeth","West End, Portland"]},
+  {abbr:"MD",name:"Maryland",capital:"Annapolis",population:6263220,cities:["Baltimore","Columbia","Germantown","Silver Spring"],universities:["Johns Hopkins University","University of Maryland, College Park","US Naval Academy"],schools:["Poolesville High School","Thomas S. Wootton High (Rockville)","Richard Montgomery High (Rockville)"],neighborhoods:["Roland Park, Baltimore","Chevy Chase (Montgomery County)","Bethesda"]},
+  {abbr:"MA",name:"Massachusetts",capital:"Boston",population:7169608,cities:["Boston","Worcester","Springfield","Cambridge"],universities:["MIT","Harvard University","Boston College","Tufts University"],schools:["MA Academy for Math & Science (Worcester)","Weston High School","Belmont High School"],neighborhoods:["Wellesley Farms, Wellesley","Newton Centre, Newton","Coolidge Corner, Brookline"]},
+  {abbr:"MI",name:"Michigan",capital:"Lansing",population:10037261,cities:["Detroit","Grand Rapids","Ann Arbor","Lansing"],universities:["University of Michigan","Michigan State University","Wayne State University"],schools:["International Academy","Detroit Country Day","Pioneer High School"],neighborhoods:["Midtown, Detroit","East Grand Rapids","Downtown Ann Arbor"]},
+  {abbr:"MN",name:"Minnesota",capital:"St. Paul",population:5737915,cities:["Minneapolis","St. Paul","Rochester","Duluth"],universities:["University of Minnesota","Carleton College","Macalester College"],schools:["Wayzata High School","Edina High School","Minnetonka High School"],neighborhoods:["Uptown, Minneapolis","Grand Avenue, St. Paul","North Loop, Minneapolis"]},
+  {abbr:"MS",name:"Mississippi",capital:"Jackson",population:2943045,cities:["Jackson","Gulfport","Southaven","Biloxi"],universities:["University of Mississippi (Ole Miss)","Mississippi State University","University of Southern Mississippi","Jackson State University"],schools:["MS School for Mathematics & Science (Columbus)","Ocean Springs High School","Madison Central High School"],neighborhoods:["Annandale/Reunion, Madison","Ocean Springs, Gulf Coast","Olive Branch, DeSoto County"]},
+  {abbr:"MO",name:"Missouri",capital:"Jefferson City",population:6196156,cities:["Kansas City","St. Louis","Springfield","Columbia"],universities:["Washington University in St. Louis","University of Missouri","Saint Louis University"],schools:["Clayton High School","Ladue Horton Watkins High","Parkway West High"],neighborhoods:["Central West End, St. Louis","Country Club Plaza, Kansas City","The Grove, St. Louis"]},
+  {abbr:"MT",name:"Montana",capital:"Helena",population:1132812,cities:["Billings","Missoula","Great Falls","Helena"],universities:["University of Montana","Montana State University","Carroll College"],schools:["Hellgate High School","Bozeman High School","Helena High School"],neighborhoods:["University District, Missoula","Downtown Bozeman","West End, Billings"]},
+  {abbr:"NE",name:"Nebraska",capital:"Lincoln",population:1978379,cities:["Omaha","Lincoln","Bellevue","Grand Island"],universities:["University of Nebraska-Lincoln","Creighton University","University of Nebraska Omaha"],schools:["Westside High School","Lincoln East High","Millard North High School"],neighborhoods:["Dundee, Omaha","Old Market, Omaha","Haymarket, Lincoln"]},
+  {abbr:"NV",name:"Nevada",capital:"Carson City",population:3177772,cities:["Las Vegas","Henderson","Reno","North Las Vegas"],universities:["UNLV","University of Nevada, Reno","Nevada State University"],schools:["The Meadows School","Coral Academy","Davidson Academy"],neighborhoods:["Summerlin, Las Vegas","Midtown, Reno","Henderson Green Valley"]},
+  {abbr:"NH",name:"New Hampshire",capital:"Concord",population:1415860,cities:["Manchester","Nashua","Concord","Derry"],universities:["Dartmouth College","University of New Hampshire","Saint Anselm College"],schools:["Hanover High School","Academy for Science & Design","Hollis/Brookline Cooperative"],neighborhoods:["Downtown Portsmouth","Bedford Center","Hanover Village"]},
+  {abbr:"NJ",name:"New Jersey",capital:"Trenton",population:9500851,cities:["Newark","Jersey City","Paterson","Elizabeth"],universities:["Princeton University","Rutgers University","Stevens Institute of Technology","NJIT"],schools:["High Technology High School (Lincroft)","Bergen County Academies (Hackensack)","Millburn High School"],neighborhoods:["Montclair (Essex County)","Short Hills (Millburn)","Princeton (Mercer County)"]},
+  {abbr:"NM",name:"New Mexico",capital:"Santa Fe",population:2113344,cities:["Albuquerque","Las Cruces","Santa Fe","Rio Rancho"],universities:["University of New Mexico","New Mexico Tech","New Mexico State University"],schools:["Albuquerque Academy","Los Alamos High School","Eldorado High School"],neighborhoods:["Nob Hill, Albuquerque","Canyon Road, Santa Fe","Old Town, Albuquerque"]},
+  {abbr:"NY",name:"New York",capital:"Albany",population:19867248,cities:["New York City","Buffalo","Rochester","Yonkers"],universities:["Columbia University","Cornell University","NYU","University of Rochester"],schools:["Stuyvesant High School","Bronx High School of Science","Townsend Harris High School"],neighborhoods:["Tribeca (Manhattan, NYC)","Park Slope (Brooklyn, NYC)","Scarsdale (Westchester County)"]},
+  {abbr:"NC",name:"North Carolina",capital:"Raleigh",population:10835491,cities:["Charlotte","Raleigh","Durham","Greensboro"],universities:["Duke University","UNC Chapel Hill","Wake Forest University"],schools:["Raleigh Charter High","NC School of Science & Math","Myers Park High"],neighborhoods:["Myers Park, Charlotte","Downtown Durham","Dilworth, Charlotte"]},
+  {abbr:"ND",name:"North Dakota",capital:"Bismarck",population:779094,cities:["Fargo","Bismarck","Grand Forks","Minot"],universities:["University of North Dakota","North Dakota State University","Minot State University"],schools:["Fargo Davies High","Shanley High School","Red River High School"],neighborhoods:["Downtown Fargo","University Park, Grand Forks","Cathedral District, Bismarck"]},
+  {abbr:"OH",name:"Ohio",capital:"Columbus",population:11785935,cities:["Columbus","Cleveland","Cincinnati","Toledo"],universities:["Ohio State University","Case Western Reserve","University of Cincinnati"],schools:["Walnut Hills High School","Solon High School","Upper Arlington High"],neighborhoods:["Short North, Columbus","Hyde Park, Cincinnati","Tremont, Cleveland"]},
+  {abbr:"OK",name:"Oklahoma",capital:"Oklahoma City",population:4019800,cities:["Oklahoma City","Tulsa","Norman","Edmond"],universities:["University of Oklahoma","Oklahoma State University","University of Tulsa"],schools:["Jenks High School","Edmond North High","Norman North High School"],neighborhoods:["Midtown, Oklahoma City","Cherry Street, Tulsa","Paseo Arts District, OKC"]},
+  {abbr:"OR",name:"Oregon",capital:"Salem",population:4233358,cities:["Portland","Salem","Eugene","Bend"],universities:["University of Oregon","Oregon State University","Reed College"],schools:["Lincoln High School","Lake Oswego High","West Linn High School"],neighborhoods:["Pearl District, Portland","Alberta Arts, Portland","Hawthorne, Portland"]},
+  {abbr:"PA",name:"Pennsylvania",capital:"Harrisburg",population:13078751,cities:["Philadelphia","Pittsburgh","Allentown","Erie"],universities:["University of Pennsylvania","Carnegie Mellon University","Penn State University","University of Pittsburgh"],schools:["Central High School (Philadelphia)","Julia R. Masterman School (Philadelphia)","Upper St. Clair High School"],neighborhoods:["Rittenhouse Square, Philadelphia","Squirrel Hill, Pittsburgh","Chestnut Hill, Philadelphia"]},
+  {abbr:"RI",name:"Rhode Island",capital:"Providence",population:1095962,cities:["Providence","Warwick","Cranston","Pawtucket"],universities:["Brown University","RISD","University of Rhode Island"],schools:["Classical High School","Barrington High School","East Greenwich High"],neighborhoods:["College Hill, Providence","Federal Hill, Providence","Thames Street, Newport"]},
+  {abbr:"SC",name:"South Carolina",capital:"Columbia",population:5282634,cities:["Charleston","Columbia","Greenville","Myrtle Beach"],universities:["Clemson University","University of South Carolina","College of Charleston"],schools:["Academic Magnet High","Wando High School","Dreher High School"],neighborhoods:["Downtown Charleston","Greenville Main Street","Five Points, Columbia"]},
+  {abbr:"SD",name:"South Dakota",capital:"Pierre",population:919318,cities:["Sioux Falls","Rapid City","Aberdeen","Pierre"],universities:["University of South Dakota","South Dakota State University","Augustana University"],schools:["Lincoln High School, SF","Stevens High School","O'Gorman High School"],neighborhoods:["Downtown Sioux Falls","Cathedral District, Rapid City","Main Street, Deadwood"]},
+  {abbr:"TN",name:"Tennessee",capital:"Nashville",population:7227750,cities:["Nashville","Memphis","Knoxville","Chattanooga"],universities:["Vanderbilt University","University of Tennessee, Knoxville","Rhodes College","Middle Tennessee State University"],schools:["Franklin High School (Williamson County)","L&N STEM Academy (Knoxville)","Baylor School (Chattanooga)"],neighborhoods:["Brentwood (Nashville metro)","Franklin (Nashville metro)","Maryville/Alcoa (Knoxville metro)"]},
+  {abbr:"TX",name:"Texas",capital:"Austin",population:30503301,cities:["Houston","Dallas","Austin","San Antonio"],universities:["UT Austin","Rice University","Texas A&M University"],schools:["School for the Talented & Gifted","Westlake High School","Allen High School"],neighborhoods:["Highland Park, Dallas","The Heights, Houston","South Congress, Austin"]},
+  {abbr:"UT",name:"Utah",capital:"Salt Lake City",population:3417734,cities:["Salt Lake City","Provo","West Valley City","St. George"],universities:["University of Utah","BYU","Utah State University"],schools:["Waterford School","Park City High","Brighton High School"],neighborhoods:["Sugar House, SLC","Capitol Hill, SLC","Downtown Provo"]},
+  {abbr:"VT",name:"Vermont",capital:"Montpelier",population:647464,cities:["Burlington","South Burlington","Colchester","Rutland"],universities:["University of Vermont","Middlebury College","Champlain College","Norwich University"],schools:["Stowe School District","South Burlington High School","Champlain Valley Union High School"],neighborhoods:["Hill Section, Burlington","South End, Burlington","Stowe Village"]},
+  {abbr:"VA",name:"Virginia",capital:"Richmond",population:8683619,cities:["Virginia Beach","Norfolk","Richmond","Arlington"],universities:["University of Virginia","Virginia Tech","William & Mary"],schools:["Thomas Jefferson High School for S&T","Langley High School","Maggie Walker Governor's School"],neighborhoods:["Fan District, Richmond","Old Town Alexandria","Clarendon, Arlington"]},
+  {abbr:"WA",name:"Washington",capital:"Olympia",population:7812880,cities:["Seattle","Spokane","Tacoma","Bellevue"],universities:["University of Washington","Washington State University","Gonzaga University"],schools:["Tesla STEM High School","Newport High School","Garfield High School"],neighborhoods:["Capitol Hill, Seattle","Fremont, Seattle","Bellevue Downtown"]},
+  {abbr:"WV",name:"West Virginia",capital:"Charleston",population:1769979,cities:["Charleston","Huntington","Morgantown","Parkersburg"],universities:["West Virginia University","Marshall University","West Virginia Wesleyan College","Shepherd University"],schools:["George Washington High School (Charleston)","Morgantown High School","Bridgeport High School"],neighborhoods:["South Hills, Charleston","Suncrest, Morgantown","Barboursville (Huntington metro)"]},
+  {abbr:"WI",name:"Wisconsin",capital:"Madison",population:5910955,cities:["Milwaukee","Madison","Green Bay","Kenosha"],universities:["University of Wisconsin-Madison","Marquette University","UW-Milwaukee"],schools:["Rufus King High School","James Madison Memorial High","Brookfield Central High"],neighborhoods:["Third Ward, Milwaukee","Willy Street, Madison","Bay View, Milwaukee"]},
+  {abbr:"WY",name:"Wyoming",capital:"Cheyenne",population:584057,cities:["Cheyenne","Casper","Laramie","Gillette"],universities:["University of Wyoming"],schools:["Laramie High School","Kelly Walsh High","Cheyenne Central High"],neighborhoods:["Downtown Laramie","Old Town, Sheridan","Downtown Cheyenne"]}
+];
+
+const existing = db.prepare('SELECT COUNT(*) as count FROM states').get();
+if (existing.count === 0) {
+  const insert = db.prepare(`
+    INSERT INTO states (abbr, name, capital, population, cities, universities, schools, neighborhoods)
+    VALUES (@abbr, @name, @capital, @population, @cities, @universities, @schools, @neighborhoods)
+  `);
+
+  const tx = db.transaction((states) => {
+    for (const s of states) {
+      insert.run({
+        abbr: s.abbr,
+        name: s.name,
+        capital: s.capital,
+        population: s.population,
+        cities: JSON.stringify(s.cities),
+        universities: JSON.stringify(s.universities),
+        schools: JSON.stringify(s.schools),
+        neighborhoods: JSON.stringify(s.neighborhoods)
+      });
+    }
+  });
+
+  tx(SEED);
+  console.log(`Seeded ${SEED.length} states into database.`);
+} else {
+  console.log(`Database already has ${existing.count} states. Skipping seed.`);
+}
+
+db.close();
+console.log('Database setup complete.');

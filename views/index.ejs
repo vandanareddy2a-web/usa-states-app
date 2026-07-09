@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USA States</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <%- include('layout') %>
+
+  <div class="header">
+    <h1>USA <span>States</span></h1>
+    <p class="subtitle">All 50 states &mdash; Capital, cities, universities, schools &amp; neighborhoods</p>
+    <span class="stat">Total U.S. Population: <%= totalPop.toLocaleString('en-US') %></span>
+  </div>
+
+  <div class="map-section">
+    <div class="map-container">
+      <div class="map-grid" id="mapGrid"></div>
+    </div>
+  </div>
+
+  <div class="search-section">
+    <div class="search-bar">
+      <input class="search-input" id="searchInput" type="text" placeholder="Search states, cities, or universities...">
+      <span class="result-count" id="resultCount"><%= states.length %> states</span>
+    </div>
+  </div>
+
+  <div class="states-grid" id="statesGrid">
+  <% const maxPop = Math.max(...states.map(s => s.population)); %>
+  <% states.forEach(s => { %>
+    <div class="state-card" data-abbr="<%= s.abbr %>"
+         data-search="<%= [s.name, s.abbr, s.capital, s.region, s.governor, s.capital_mayor, ...s.senators, ...s.cities, ...s.universities, ...s.schools, ...s.neighborhoods, ...s.attractions, s.borders.north, s.borders.south, s.borders.east, s.borders.west].join(' ').toLowerCase() %>">
+      <div class="card-header" onclick="toggleCard('<%= s.abbr %>')">
+        <img class="state-flag" src="<%= s.flag_url %>" alt="Flag of <%= s.name %>" loading="lazy" width="40" height="26">
+        <div class="state-abbr"><%= s.abbr %></div>
+        <div class="card-title-area">
+          <h3><%= s.name %> <span class="region-tag">(<%= s.region %>)</span></h3>
+          <div class="card-meta">
+            <span>Capital: <%= s.capital %></span>
+            <span class="population-tag"><%= s.popFormatted %></span>
+          </div>
+        </div>
+        <div class="pop-bar-wrap"><div class="pop-bar" style="width:<%= Math.round((s.population / maxPop) * 100) %>%"></div></div>
+        <span class="expand-icon">&#9662;</span>
+      </div>
+      <div class="card-details">
+        <div class="details-inner">
+          <div class="detail-group">
+            <h4>Major Cities</h4>
+            <ul><% s.cities.forEach(c => { %><li><%= c %></li><% }) %></ul>
+          </div>
+          <div class="detail-group">
+            <h4>Top Universities</h4>
+            <ul><% s.universities.forEach(u => { %><li><%= u %></li><% }) %></ul>
+          </div>
+          <div class="detail-group">
+            <h4>Top Schools</h4>
+            <ul><% s.schools.forEach(sc => { %><li><%= sc %></li><% }) %></ul>
+          </div>
+          <div class="detail-group">
+            <h4>Top Neighborhoods</h4>
+            <ul><% s.neighborhoods.forEach(n => { %><li><%= n %></li><% }) %></ul>
+          </div>
+          <div class="detail-group">
+            <h4>Top Attractions</h4>
+            <ul><% s.attractions.forEach(a => { %><li><%= a %></li><% }) %></ul>
+          </div>
+          <div class="detail-group">
+            <h4>Leadership</h4>
+            <ul>
+              <li>Governor: <%= s.governor %></li>
+              <% s.senators.forEach(sen => { %><li>Senator: <%= sen %></li><% }) %>
+              <li>Mayor of <%= s.capital %>: <%= s.capital_mayor %></li>
+            </ul>
+          </div>
+          <div class="detail-group borders-group">
+            <h4>Borders</h4>
+            <div class="compass-grid">
+              <span class="compass-dir">N</span><span class="compass-val"><%= s.borders.north %></span>
+              <span class="compass-dir">S</span><span class="compass-val"><%= s.borders.south %></span>
+              <span class="compass-dir">E</span><span class="compass-val"><%= s.borders.east %></span>
+              <span class="compass-dir">W</span><span class="compass-val"><%= s.borders.west %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+  </div>
+
+  <script>
+  const MAP_LAYOUT = [
+    {abbr:"AK",col:1,row:1},{abbr:"ME",col:12,row:1},
+    {abbr:"WA",col:2,row:2},{abbr:"ID",col:3,row:2},{abbr:"MT",col:4,row:2},{abbr:"ND",col:5,row:2},{abbr:"MN",col:6,row:2},{abbr:"WI",col:7,row:2},{abbr:"MI",col:8,row:2},{abbr:"NY",col:10,row:2},{abbr:"VT",col:11,row:2},{abbr:"NH",col:12,row:2},
+    {abbr:"OR",col:2,row:3},{abbr:"WY",col:4,row:3},{abbr:"SD",col:5,row:3},{abbr:"IA",col:6,row:3},{abbr:"IL",col:7,row:3},{abbr:"IN",col:8,row:3},{abbr:"OH",col:9,row:3},{abbr:"PA",col:10,row:3},{abbr:"MA",col:11,row:3},{abbr:"CT",col:12,row:3},
+    {abbr:"CA",col:2,row:4},{abbr:"NV",col:3,row:4},{abbr:"UT",col:4,row:4},{abbr:"CO",col:5,row:4},{abbr:"NE",col:6,row:4},{abbr:"MO",col:7,row:4},{abbr:"KY",col:8,row:4},{abbr:"WV",col:9,row:4},{abbr:"VA",col:10,row:4},{abbr:"NJ",col:11,row:4},{abbr:"RI",col:12,row:4},
+    {abbr:"AZ",col:3,row:5},{abbr:"NM",col:4,row:5},{abbr:"KS",col:5,row:5},{abbr:"OK",col:6,row:5},{abbr:"AR",col:7,row:5},{abbr:"TN",col:8,row:5},{abbr:"NC",col:9,row:5},{abbr:"SC",col:10,row:5},{abbr:"MD",col:11,row:5},{abbr:"DE",col:12,row:5},
+    {abbr:"TX",col:5,row:6},{abbr:"LA",col:7,row:6},{abbr:"MS",col:8,row:6},{abbr:"AL",col:9,row:6},{abbr:"GA",col:10,row:6},
+    {abbr:"HI",col:1,row:7},{abbr:"FL",col:10,row:7}
+  ];
+
+  const grid = document.getElementById('mapGrid');
+  MAP_LAYOUT.forEach(tile => {
+    const el = document.createElement('div');
+    el.className = 'map-tile';
+    el.textContent = tile.abbr;
+    el.dataset.abbr = tile.abbr;
+    el.style.gridColumn = tile.col;
+    el.style.gridRow = tile.row;
+    el.addEventListener('click', () => selectState(tile.abbr));
+    grid.appendChild(el);
+  });
+
+  function toggleCard(abbr) {
+    const card = document.querySelector('.state-card[data-abbr="' + abbr + '"]');
+    const wasExpanded = card.classList.contains('expanded');
+    document.querySelectorAll('.state-card.expanded').forEach(c => c.classList.remove('expanded'));
+    document.querySelectorAll('.map-tile.active').forEach(t => t.classList.remove('active'));
+    if (!wasExpanded) {
+      card.classList.add('expanded');
+      const tile = document.querySelector('.map-tile[data-abbr="' + abbr + '"]');
+      if (tile) tile.classList.add('active');
+    }
+  }
+
+  function selectState(abbr) {
+    const card = document.querySelector('.state-card[data-abbr="' + abbr + '"]');
+    if (!card || card.style.display === 'none') return;
+    document.querySelectorAll('.state-card.expanded').forEach(c => c.classList.remove('expanded'));
+    document.querySelectorAll('.map-tile.active').forEach(t => t.classList.remove('active'));
+    card.classList.add('expanded');
+    const tile = document.querySelector('.map-tile[data-abbr="' + abbr + '"]');
+    if (tile) tile.classList.add('active');
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    let count = 0;
+    document.querySelectorAll('.state-card').forEach(card => {
+      const match = !q || card.dataset.search.includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) count++;
+    });
+    document.getElementById('resultCount').textContent = count + (count === 1 ? ' state' : ' states');
+  });
+
+  // Deep link support, e.g. /?state=CA — lets other apps (like a capitals
+  // quiz) link straight to a state's full profile.
+  const deepLinkAbbr = new URLSearchParams(window.location.search).get('state');
+  if (deepLinkAbbr) {
+    selectState(deepLinkAbbr.toUpperCase());
+  }
+  </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - USA States</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <%- include('../layout') %>
+
+  <div class="admin-container">
+    <div class="admin-header">
+      <h1>Admin Dashboard</h1>
+      <p>Manage all 50 U.S. states data</p>
+    </div>
+
+    <div class="admin-stats">
+      <div class="stat-card">
+        <div class="label">Total States</div>
+        <div class="value"><%= states.length %></div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Total Population</div>
+        <div class="value"><%= totalPop.toLocaleString('en-US') %></div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Avg Population</div>
+        <div class="value"><%= Math.round(totalPop / states.length).toLocaleString('en-US') %></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 1rem;">
+      <input class="search-input" id="adminSearch" type="text" placeholder="Filter states..." style="max-width: 300px;">
+    </div>
+
+    <div style="overflow-x: auto;">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Flag</th>
+            <th>Abbr</th>
+            <th>State</th>
+            <th>Capital</th>
+            <th>Population</th>
+            <th>Last Updated</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="stateRows">
+        <% states.forEach(s => { %>
+          <tr data-search="<%= (s.name + ' ' + s.abbr).toLowerCase() %>">
+            <td><img src="<%= s.flag_url %>" alt="Flag of <%= s.name %>" loading="lazy" style="width:32px;height:21px;object-fit:cover;border-radius:2px;border:1px solid var(--border);"></td>
+            <td><strong><%= s.abbr %></strong></td>
+            <td class="state-name"><%= s.name %></td>
+            <td><%= s.capital %></td>
+            <td class="pop"><%= s.popFormatted %></td>
+            <td><%= s.updated_at ? new Date(s.updated_at).toLocaleDateString() : '-' %></td>
+            <td><a href="/admin/states/<%= s.abbr %>/edit" class="btn btn-outline btn-sm">Edit</a></td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+  document.getElementById('adminSearch').addEventListener('input', function() {
+    const q = this.value.toLowerCase().trim();
+    document.querySelectorAll('#stateRows tr').forEach(row => {
+      row.style.display = (!q || row.dataset.search.includes(q)) ? '' : 'none';
+    });
+  });
+  </script>
+</body>
+</html>
