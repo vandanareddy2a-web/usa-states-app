@@ -4,433 +4,320 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>USA State Capitals Quiz &amp; Map — Postcard Atlas | Learn All 50 Capitals</title>
-  <meta name="description" content="A colorful quiz, flashcard game, and interactive map for learning all 50 U.S. state capitals. Play the quiz, explore states by region, and jump to full state profiles.">
+  <meta name="description" content="A postcard-themed quiz, flashcard game, and interactive map for learning all 50 U.S. state capitals. Play the quiz, explore states by region, and jump to full state profiles.">
   <meta name="keywords" content="state capitals quiz, US state capitals game, learn state capitals, USA states quiz, 50 states capitals, state capitals map">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://usa-states-re4o.onrender.com/capitals-quiz">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="USA State Capitals Quiz &amp; Map — Postcard Atlas">
-  <meta property="og:description" content="Collect a stamp from every state capital in the union — a colorful quiz, flashcard game, and map for all 50 states.">
+  <meta property="og:description" content="Collect a stamp from every state capital in the union — a postcard-themed quiz, flashcard game, and map for all 50 states.">
   <meta property="og:url" content="https://usa-states-re4o.onrender.com/capitals-quiz">
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="USA State Capitals Quiz &amp; Map — Postcard Atlas">
-  <meta name="twitter:description" content="Collect a stamp from every state capital in the union — a colorful quiz, flashcard game, and map for all 50 states.">
+  <meta name="twitter:description" content="Collect a stamp from every state capital in the union — a postcard-themed quiz, flashcard game, and map for all 50 states.">
   <link rel="stylesheet" href="/styles.css">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
   <%- include('layout') %>
 
   <style>
     .quiz-page {
-      --bg: #eaf6ff;
-      --bg-2: #dcefff;
-      --card: #ffffff;
-      --card-2: #f4fbff;
-      --ink: #1f2a44;
-      --ink-soft: rgba(31,42,68,.62);
-      --ink-faint: rgba(31,42,68,.28);
-      --accent: #ff5d8f;
-      --accent-ink: #d43e70;
-      --gold: #ffd23f;
-      --success: #06d6a0;
-      --success-ink: #049270;
-      --danger: #ff6b6b;
-      --danger-ink: #e0453f;
-      --line: rgba(31,42,68,.12);
-      --radius: 18px;
-      --radius-sm: 12px;
-      --font-display: 'Fredoka', 'Trebuchet MS', sans-serif;
-      --font-body: 'Nunito', 'Segoe UI', sans-serif;
+      --paper: #f5ead0;
+      --paper-2: #eeddb8;
+      --paper-shadow: #cdb27e;
+      --ink: #1b3a4b;
+      --ink-soft: rgba(27,58,75,0.62);
+      --ink-faint: rgba(27,58,75,0.32);
+      --rust: #c44a26;
+      --rust-ink: #a53c1c;
+      --mustard: #e3a220;
+      --forest: #2f7d4f;
+      --desk: #e4d6ab;
+      --desk-2: #d2bf87;
+      --line: rgba(27,58,75,0.25);
+      --radius: 4px;
+      --font-display: Futura, "Century Gothic", "Trebuchet MS", sans-serif;
+      --font-body: Georgia, "Iowan Old Style", "Palatino Linotype", serif;
       --font-mono: "Courier New", Courier, monospace;
+      /* region ink colors — vivid, travel-poster saturated */
+      --r-northeast: #2f7a8c;
+      --r-south: #d9691d;
+      --r-midwest: #c99a1f;
+      --r-mountain: #3f8a5c;
+      --r-southwest: #b8532e;
+      --r-pacific: #35608f;
     }
     @media (prefers-color-scheme: dark) {
-      .quiz-page {
-        --bg: #0b1626; --bg-2: #0f1e33; --card: #16273f; --card-2: #1c3151;
-        --ink: #eaf2ff; --ink-soft: rgba(234,242,255,.68); --ink-faint: rgba(234,242,255,.3);
-        --line: rgba(234,242,255,.14);
-      }
+      .quiz-page { --desk: #17303d; --desk-2: #0f2028; --paper-shadow: #a98f5c; --line: rgba(245,234,208,0.22); }
     }
-    .quiz-page[data-theme="dark"] {
-      --bg: #0b1626; --bg-2: #0f1e33; --card: #16273f; --card-2: #1c3151;
-      --ink: #eaf2ff; --ink-soft: rgba(234,242,255,.68); --ink-faint: rgba(234,242,255,.3);
-      --line: rgba(234,242,255,.14);
-    }
-    .quiz-page[data-theme="light"] {
-      --bg: #eaf6ff; --bg-2: #dcefff; --card: #ffffff; --card-2: #f4fbff;
-      --ink: #1f2a44; --ink-soft: rgba(31,42,68,.62); --ink-faint: rgba(31,42,68,.28);
-      --line: rgba(31,42,68,.12);
-    }
+    .quiz-page[data-theme="dark"]  { --desk: #17303d; --desk-2: #0f2028; --paper-shadow: #a98f5c; --line: rgba(245,234,208,0.22); }
+    .quiz-page[data-theme="light"] { --desk: #e4d6ab; --desk-2: #d2bf87; --paper-shadow: #cdb27e; --line: rgba(27,58,75,0.25); }
 
     .quiz-page * { box-sizing: border-box; }
     .quiz-page {
       background:
-        radial-gradient(ellipse 60% 40% at 15% 0%, color-mix(in srgb, var(--gold) 30%, transparent), transparent 60%),
-        radial-gradient(ellipse 50% 40% at 100% 10%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 65%),
-        var(--bg);
+        radial-gradient(ellipse at 18% -8%, color-mix(in srgb, var(--mustard) 22%, transparent), transparent 55%),
+        var(--desk);
       color: var(--ink);
       font-family: var(--font-body);
       padding: 2.2rem 1.2rem 4rem;
     }
-    .quiz-page h1, .quiz-page h2, .quiz-page h3 { text-wrap: balance; font-family: var(--font-display); }
+    .quiz-page h1, .quiz-page h2, .quiz-page h3 { text-wrap: balance; }
 
     .atlas { max-width: 960px; margin: 0 auto; }
 
     /* ---------- Masthead ---------- */
-    .masthead {
-      display: flex;
-      align-items: center;
-      gap: 1.4rem;
-      margin-bottom: 1.2rem;
-    }
+    .masthead { display: flex; align-items: center; gap: 1.4rem; margin-bottom: 1.2rem; }
     .title-block { flex: 1; min-width: 0; }
     .eyebrow {
       font-family: var(--font-mono);
-      font-size: .7rem;
-      letter-spacing: .2em;
-      color: var(--accent-ink);
-      margin: 0 0 .3rem;
+      font-size: .68rem;
+      letter-spacing: .22em;
+      color: var(--ink-soft);
+      margin: 0 0 .35rem;
       text-transform: uppercase;
-      font-weight: 700;
     }
     .masthead h1 {
+      font-family: var(--font-display);
       font-weight: 700;
-      font-size: clamp(2rem, 5.5vw, 3.1rem);
+      font-size: clamp(1.9rem, 5vw, 2.9rem);
       letter-spacing: .01em;
       margin: 0 0 .3rem;
       color: var(--ink);
     }
-    .tagline {
-      margin: 0;
-      font-size: 1rem;
-      color: var(--ink-soft);
-      font-weight: 600;
-    }
+    .tagline { margin: 0; font-size: .95rem; color: var(--ink-soft); font-style: italic; }
     .stat-badge {
       flex-shrink: 0;
-      width: 88px;
-      height: 88px;
+      width: 84px;
+      height: 84px;
       border-radius: 50%;
+      border: 2px dashed var(--rust);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: #fff;
-      background: linear-gradient(150deg, var(--accent), var(--accent-ink));
-      box-shadow: 0 10px 18px -8px color-mix(in srgb, var(--accent) 70%, transparent);
-      transform: rotate(-4deg);
+      color: var(--rust-ink);
+      background: color-mix(in srgb, var(--paper) 65%, transparent);
+      transform: rotate(-6deg);
     }
-    .stat-badge.streak {
-      background: linear-gradient(150deg, var(--success), var(--success-ink));
-      box-shadow: 0 10px 18px -8px color-mix(in srgb, var(--success) 70%, transparent);
-      transform: rotate(4deg);
-    }
-    .stat-badge .pm-num {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 1.7rem;
-      line-height: 1;
-    }
-    .stat-badge .pm-label {
-      font-family: var(--font-mono);
-      font-size: .55rem;
-      letter-spacing: .1em;
-      margin-top: .2rem;
-      font-weight: 700;
-    }
+    .stat-badge.streak { border-color: var(--forest); color: var(--forest); transform: rotate(5deg); }
+    .stat-badge .pm-num { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; line-height: 1; }
+    .stat-badge .pm-label { font-family: var(--font-mono); font-size: .55rem; letter-spacing: .14em; margin-top: .15rem; }
 
     /* ---------- Legend ---------- */
     .legend {
       display: flex;
       flex-wrap: wrap;
-      gap: .5rem .9rem;
-      margin: 0 0 1.2rem;
-      padding: .7rem 1rem;
-      background: var(--card);
-      border-radius: var(--radius-sm);
+      gap: .4rem .9rem;
+      margin: 0 0 1.1rem;
+      padding: .55rem .9rem;
+      background: var(--paper-2);
       border: 1px solid var(--line);
+      border-radius: var(--radius);
     }
-    .legend-item { display: flex; align-items: center; gap: .4rem; font-size: .78rem; font-weight: 700; color: var(--ink-soft); }
-    .legend-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+    .legend-item { display: flex; align-items: center; gap: .4rem; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-soft); }
+    .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 
     /* ---------- Tabs ---------- */
-    .tabs { display: flex; gap: .5rem; margin-bottom: 1rem; }
+    .tabs { display: flex; gap: .5rem; margin-bottom: 1.1rem; }
     .tab-stub {
       font-family: var(--font-display);
-      font-size: .88rem;
-      font-weight: 600;
-      padding: .6rem 1.4rem;
-      background: var(--card);
+      font-size: .82rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .6rem 1.3rem .5rem;
+      background: var(--paper-2);
       color: var(--ink-soft);
-      border: none;
-      border-radius: 999px;
+      border: 1px solid var(--line);
+      border-bottom: none;
+      border-radius: var(--radius) var(--radius) 0 0;
       cursor: pointer;
-      box-shadow: 0 2px 0 var(--line);
+      position: relative;
+      top: 1px;
     }
-    .tab-stub.active {
-      background: var(--accent);
-      color: #fff;
-      box-shadow: 0 4px 0 var(--accent-ink);
+    .tab-stub::after {
+      content: "";
+      position: absolute;
+      left: 10%; right: 10%; bottom: -4px;
+      height: 4px;
+      background: repeating-linear-gradient(90deg, transparent 0 4px, var(--desk) 4px 5px);
     }
-    .tab-stub:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+    .tab-stub.active { background: var(--paper); color: var(--rust-ink); font-weight: 700; border-color: var(--line); }
+    .tab-stub:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
 
     /* ---------- Stage ---------- */
     .stage {
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: 0 20px 40px -26px rgba(20,30,60,.35);
-      padding: 1.7rem 1.7rem 1.9rem;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 0 var(--radius) var(--radius) var(--radius);
+      box-shadow: 0 18px 34px -22px rgba(0,0,0,.45), 0 1px 0 var(--paper-shadow) inset;
+      padding: 1.6rem 1.6rem 1.8rem;
     }
 
-    .route-progress {
-      position: relative;
-      height: 30px;
-      margin-bottom: 1.4rem;
-      border-bottom: 3px dashed var(--line);
-    }
+    .route-progress { position: relative; height: 28px; margin-bottom: 1.3rem; border-bottom: 2px dashed var(--ink-faint); }
     .route-progress .plane {
-      position: absolute;
-      top: -13px;
-      left: 0%;
+      position: absolute; top: -11px; left: 0%;
       transform: translateX(-50%);
-      font-size: 1.2rem;
+      font-size: 1rem;
+      color: var(--rust-ink);
       transition: left .5s cubic-bezier(.2,.8,.3,1);
     }
-    @media (prefers-reduced-motion: reduce) {
-      .route-progress .plane { transition: none; }
-    }
-    .route-progress .dest { position: absolute; right: 0; top: -11px; font-size: 1rem; }
+    @media (prefers-reduced-motion: reduce) { .route-progress .plane { transition: none; } }
+    .route-progress .dest { position: absolute; right: 0; top: -9px; font-size: .9rem; }
 
-    .postcard-split {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.6rem;
-      align-items: start;
-    }
+    .postcard-split { display: grid; grid-template-columns: 1fr 1px 1fr; gap: 1.4rem; align-items: start; }
+    .postcard-split .divider { background: var(--ink-faint); align-self: stretch; }
     @media (max-width: 640px) {
       .postcard-split { grid-template-columns: 1fr; }
+      .postcard-split .divider { display: none; }
     }
 
-    .postcard-kicker {
-      font-family: var(--font-mono);
-      font-size: .74rem;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--ink-soft);
-      margin: 0 0 .5rem;
-      font-weight: 700;
-    }
-    #quizPrompt {
-      font-size: clamp(1.8rem, 4.6vw, 2.5rem);
-      margin: 0 0 1rem;
-      color: var(--accent-ink);
-    }
-    .link-btn {
-      background: var(--card-2);
-      border: none;
-      padding: .5rem .9rem;
-      border-radius: 999px;
-      font-family: var(--font-body);
-      font-weight: 700;
-      font-size: .8rem;
-      color: var(--ink);
-      cursor: pointer;
-    }
-    .link-btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+    .postcard-kicker { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); margin: 0 0 .5rem; }
+    #quizPrompt { font-family: var(--font-display); font-size: clamp(1.6rem, 4.4vw, 2.3rem); margin: 0 0 1rem; color: var(--rust-ink); }
+    .link-btn { background: none; border: none; padding: 0; font-family: var(--font-mono); font-size: .78rem; color: var(--forest); text-decoration: underline dotted; cursor: pointer; }
+    .link-btn:focus-visible { outline: 2px solid var(--rust); outline-offset: 3px; }
 
-    .feedback-stamp { margin-top: 1.6rem; min-height: 3.6rem; }
+    .feedback-stamp { margin-top: 1.6rem; min-height: 3.4rem; }
     .feedback-stamp .stamp-text {
       display: inline-block;
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: 1.3rem;
-      padding: .4rem .9rem;
-      border-radius: var(--radius-sm);
-      color: #fff;
-      transform: rotate(-4deg) scale(0);
+      font-size: 1.25rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border: 3px solid currentColor;
+      border-radius: 8px;
+      padding: .3rem .7rem;
+      transform: rotate(-8deg);
       opacity: 0;
     }
-    .feedback-stamp.show .stamp-text { animation: stampIn .4s cubic-bezier(.34,1.56,.64,1) forwards; }
-    @media (prefers-reduced-motion: reduce) {
-      .feedback-stamp.show .stamp-text { opacity: 1; transform: rotate(-4deg) scale(1); animation: none; }
-    }
-    .feedback-stamp.correct .stamp-text { background: var(--success); box-shadow: 0 6px 0 var(--success-ink); }
-    .feedback-stamp.wrong .stamp-text { background: var(--danger); box-shadow: 0 6px 0 var(--danger-ink); }
+    .feedback-stamp.show .stamp-text { animation: stampIn .35s ease-out forwards; }
+    @media (prefers-reduced-motion: reduce) { .feedback-stamp.show .stamp-text { opacity: 1; animation: none; } }
+    .feedback-stamp.correct .stamp-text { color: var(--forest); }
+    .feedback-stamp.wrong .stamp-text { color: var(--rust-ink); }
     @keyframes stampIn {
-      0% { opacity: 0; transform: rotate(-4deg) scale(0); }
-      70% { opacity: 1; transform: rotate(-4deg) scale(1.12); }
-      100% { opacity: 1; transform: rotate(-4deg) scale(1); }
+      0% { opacity: 0; transform: rotate(-8deg) scale(2.4); }
+      60% { opacity: 1; }
+      100% { opacity: 1; transform: rotate(-8deg) scale(1); }
     }
-    .feedback-note { font-family: var(--font-mono); font-size: .82rem; color: var(--ink-soft); margin-top: .6rem; font-weight: 700; }
+    .feedback-note { font-family: var(--font-mono); font-size: .8rem; color: var(--ink-soft); margin-top: .5rem; }
 
     .options { display: grid; gap: .6rem; }
     .opt-btn {
       font-family: var(--font-body);
-      font-weight: 700;
-      font-size: 1rem;
+      font-size: .98rem;
       text-align: left;
-      padding: .7rem .9rem;
-      background: var(--card-2);
-      border: none;
-      border-left: 6px solid var(--line);
-      border-radius: var(--radius-sm);
+      padding: .65rem .8rem;
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
       cursor: pointer;
       color: var(--ink);
       display: flex;
       align-items: center;
-      gap: .6rem;
+      gap: .55rem;
     }
-    .opt-btn .stub {
-      font-family: var(--font-mono);
-      font-size: .65rem;
-      font-weight: 700;
-      color: var(--ink-soft);
-      background: var(--card);
-      border-radius: 999px;
-      padding: .1rem .5rem;
-    }
-    .opt-btn:hover:not(:disabled) { border-left-color: var(--accent); }
-    .opt-btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+    .opt-btn .stub { font-family: var(--font-mono); font-size: .7rem; color: var(--ink-soft); border: 1px solid var(--ink-faint); border-radius: 2px; padding: .05rem .3rem; }
+    .opt-btn:hover:not(:disabled) { border-color: var(--rust); }
+    .opt-btn:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
     .opt-btn:disabled { cursor: default; }
-    .opt-btn.is-correct { border-left-color: var(--success); background: color-mix(in srgb, var(--success) 16%, var(--card-2)); }
-    .opt-btn.is-wrong { border-left-color: var(--danger); background: color-mix(in srgb, var(--danger) 16%, var(--card-2)); }
+    .opt-btn.is-correct { background: color-mix(in srgb, var(--forest) 20%, var(--paper-2)); border-color: var(--forest); }
+    .opt-btn.is-wrong { background: color-mix(in srgb, var(--rust) 20%, var(--paper-2)); border-color: var(--rust); }
 
     .next-btn {
       margin-top: 1rem;
       font-family: var(--font-display);
-      font-size: .92rem;
-      font-weight: 600;
-      background: var(--accent);
-      color: #fff;
+      font-size: .82rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      background: var(--ink);
+      color: var(--paper);
       border: none;
-      border-radius: 999px;
-      padding: .75rem 1.3rem;
+      border-radius: var(--radius);
+      padding: .65rem 1.1rem;
       cursor: pointer;
-      box-shadow: 0 4px 0 var(--accent-ink);
     }
-    .next-btn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 var(--accent-ink); }
     .next-btn:disabled { opacity: .35; cursor: default; }
-    .next-btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+    .next-btn:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
 
     /* ---------- Explore view ---------- */
-    .region-block { margin-bottom: 1.8rem; }
+    .region-block { margin-bottom: 1.7rem; }
     .region-block:last-child { margin-bottom: 0; }
     .region-head {
       display: flex;
       align-items: center;
-      gap: .55rem;
+      gap: .5rem;
       font-family: var(--font-display);
-      font-size: .95rem;
-      font-weight: 600;
-      color: #fff;
-      margin: 0 0 .8rem;
-      padding: .35rem .8rem;
-      border-radius: 999px;
-      width: fit-content;
+      font-size: .82rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--region-color, var(--ink-soft));
+      margin: 0 0 .7rem;
+      border-bottom: 2px solid var(--region-color, var(--line));
+      padding-bottom: .35rem;
     }
-    .region-head svg { width: 16px; height: 16px; }
+    .region-head svg { width: 16px; height: 16px; color: var(--region-color, var(--rust-ink)); }
 
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(142px, 1fr));
-      gap: .8rem;
-    }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .7rem; }
     .flip-card { perspective: 800px; height: 120px; }
     .flip-card-inner {
-      position: relative;
-      width: 100%; height: 100%;
+      position: relative; width: 100%; height: 100%;
       transform-style: preserve-3d;
       transition: transform .5s cubic-bezier(.2,.8,.3,1);
     }
-    @media (prefers-reduced-motion: reduce) {
-      .flip-card-inner { transition: none; }
-    }
+    @media (prefers-reduced-motion: reduce) { .flip-card-inner { transition: none; } }
     .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
     .flip-face {
       position: absolute; inset: 0;
       backface-visibility: hidden;
-      border-radius: var(--radius-sm);
-      border-top: 5px solid var(--region-color, var(--accent));
-      padding: .6rem .65rem;
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--region-color, var(--rust));
+      border-radius: var(--radius);
+      padding: .55rem .6rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       cursor: pointer;
-      background: color-mix(in srgb, var(--region-color, var(--accent)) 12%, var(--card-2));
+      background: color-mix(in srgb, var(--region-color, var(--rust)) 10%, var(--paper-2));
     }
-    .flip-face:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
-    .flip-front .abbr { font-family: var(--font-mono); font-size: .7rem; font-weight: 700; color: var(--ink-soft); }
-    .flip-front .name { font-family: var(--font-display); font-weight: 600; font-size: .95rem; }
-    .flip-front svg { width: 20px; height: 20px; color: var(--region-color, var(--accent)); align-self: flex-end; }
+    .flip-face:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
+    .flip-front .abbr { font-family: var(--font-mono); font-size: .7rem; color: var(--ink-soft); }
+    .flip-front .name { font-family: var(--font-display); font-weight: 700; font-size: .92rem; }
+    .flip-front svg { width: 20px; height: 20px; color: var(--region-color, var(--ink-faint)); align-self: flex-end; }
     .flip-back {
       transform: rotateY(180deg);
-      background: color-mix(in srgb, var(--region-color, var(--accent)) 24%, var(--card));
+      background: color-mix(in srgb, var(--region-color, var(--forest)) 22%, var(--paper));
       align-items: flex-start;
     }
-    .flip-back .cap { font-family: var(--font-display); font-weight: 600; font-size: .98rem; color: var(--ink); }
-    .flip-back .lbl { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .08em; color: var(--ink-soft); text-transform: uppercase; font-weight: 700; }
-    .profile-link {
-      font-family: var(--font-mono);
-      font-size: .68rem;
-      font-weight: 700;
-      color: var(--ink);
-      background: var(--card);
-      border-radius: 999px;
-      padding: .15rem .55rem;
-      align-self: flex-start;
-    }
-    .profile-link:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
-    .mastered-mark {
-      position: absolute; top: 4px; right: 4px;
-      font-size: 15px;
-      filter: drop-shadow(0 1px 1px rgba(0,0,0,.25));
-    }
+    .flip-back .cap { font-family: var(--font-body); font-style: italic; font-weight: 700; font-size: .92rem; color: var(--ink); }
+    .flip-back .lbl { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .1em; color: var(--ink-soft); text-transform: uppercase; }
+    .profile-link { font-family: var(--font-mono); font-size: .66rem; letter-spacing: .03em; color: var(--rust-ink); text-decoration: underline dotted; align-self: flex-start; }
+    .profile-link:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
+    .mastered-mark { position: absolute; top: 4px; right: 4px; width: 16px; height: 16px; color: var(--rust-ink); }
 
     /* ---------- Map view ---------- */
-    .map-hint {
-      font-size: .85rem;
-      font-weight: 700;
-      color: var(--ink-soft);
-      margin: 0 0 1rem;
-    }
-    .us-map {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      grid-template-rows: repeat(7, 1fr);
-      gap: 4px;
-      aspect-ratio: 12 / 7;
-    }
+    .map-hint { font-family: var(--font-mono); font-size: .78rem; color: var(--ink-soft); margin: 0 0 1rem; }
+    .us-map { display: grid; grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(7, 1fr); gap: 3px; aspect-ratio: 12 / 7; }
     .us-tile {
-      background: color-mix(in srgb, var(--tile-color, var(--ink-faint)) 55%, var(--card-2));
-      border-radius: 6px;
+      background: color-mix(in srgb, var(--tile-color, var(--ink-faint)) 45%, var(--paper-2));
+      border: 1px solid var(--line);
+      border-radius: 3px;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
       font-family: var(--font-mono);
       font-weight: 700;
-      font-size: clamp(.5rem, 1.3vw, .75rem);
+      font-size: clamp(.5rem, 1.2vw, .72rem);
       color: var(--ink);
       cursor: pointer;
-      border: none;
       padding: 0;
     }
-    .us-tile.mastered {
-      background: var(--tile-color, var(--accent));
-      color: #fff;
-    }
-    .us-tile:hover, .us-tile:focus-visible {
-      transform: scale(1.1);
-      z-index: 2;
-      outline: 3px solid var(--gold);
-      outline-offset: 1px;
-    }
-    .us-tile .star { position: absolute; top: -6px; right: -4px; font-size: .85em; }
+    .us-tile.mastered { background: var(--tile-color, var(--rust)); color: var(--paper); border-color: transparent; }
+    .us-tile:hover, .us-tile:focus-visible { transform: scale(1.1); z-index: 2; outline: 2px solid var(--rust); outline-offset: 1px; }
+    .us-tile .mark { position: absolute; top: -6px; right: -4px; width: 12px; height: 12px; color: var(--paper); }
   </style>
 
   <div class="quiz-page">
@@ -438,7 +325,7 @@
       <header class="masthead">
         <div class="stat-badge">
           <span class="pm-num" id="statMastered">0</span>
-          <span class="pm-label">/ 50 &#127894;</span>
+          <span class="pm-label">/ 50 STAMPS</span>
         </div>
         <div class="title-block">
           <p class="eyebrow">A Fifty-State Road Trip</p>
@@ -447,7 +334,7 @@
         </div>
         <div class="stat-badge streak">
           <span class="pm-num" id="statStreak">0</span>
-          <span class="pm-label">STREAK &#128293;</span>
+          <span class="pm-label">STREAK</span>
         </div>
       </header>
 
@@ -462,7 +349,7 @@
       <main>
         <section id="quizView" class="stage">
           <div class="route-progress">
-            <span class="plane" id="planeMarker" style="left:0%">&#9992;&#65039;</span>
+            <span class="plane" id="planeMarker" style="left:0%">&#9992;</span>
             <span class="dest">&#127937;</span>
           </div>
 
@@ -473,6 +360,7 @@
               <button class="link-btn" id="toggleDirection">&#8644; swap &mdash; name the state instead</button>
               <div class="feedback-stamp" id="feedbackStamp"></div>
             </div>
+            <div class="divider" aria-hidden="true"></div>
             <div class="addr-side">
               <div class="options" id="quizOptions"></div>
               <button class="next-btn" id="nextBtn" disabled>Mail it &mdash; next postcard &#8594;</button>
@@ -483,7 +371,7 @@
         <section id="exploreView" class="stage" hidden></section>
 
         <section id="mapView" class="stage" hidden>
-          <p class="map-hint">Tap a state to flip its postcard &mdash; colored by region, gold star once you've mastered it.</p>
+          <p class="map-hint">TAP A STATE TO FLIP ITS POSTCARD — COLORED BY REGION, FILLED IN ONCE MASTERED.</p>
           <div class="us-map" id="usMap"></div>
         </section>
       </main>
@@ -548,12 +436,12 @@
     ];
 
     var REGIONS = [
-      {key:"northeast", label:"Northeast", icon:"lighthouse", color:"#ff5d8f"},
-      {key:"south", label:"South", icon:"palm", color:"#ff9f1c"},
-      {key:"midwest", label:"Midwest", icon:"wheat", color:"#e0b400"},
-      {key:"mountain", label:"Mountain", icon:"mountain", color:"#06d6a0"},
-      {key:"southwest", label:"Southwest", icon:"cactus", color:"#9b5de5"},
-      {key:"pacific", label:"Pacific", icon:"wave", color:"#00b4d8"}
+      {key:"northeast", label:"Northeast", icon:"lighthouse", varName:"--r-northeast"},
+      {key:"south", label:"South", icon:"palm", varName:"--r-south"},
+      {key:"midwest", label:"Midwest", icon:"wheat", varName:"--r-midwest"},
+      {key:"mountain", label:"Mountain", icon:"mountain", varName:"--r-mountain"},
+      {key:"southwest", label:"Southwest", icon:"cactus", varName:"--r-southwest"},
+      {key:"pacific", label:"Pacific", icon:"wave", varName:"--r-pacific"}
     ];
     var REGION_BY_KEY = {};
     REGIONS.forEach(function (r) { REGION_BY_KEY[r.key] = r; });
@@ -577,7 +465,8 @@
         wheat: '<path d="M12 21V6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12 7l-3-2M12 7l3-2M12 10l-3-2M12 10l3-2M12 13l-3-2M12 13l3-2M12 16l-3-2M12 16l3-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>',
         mountain: '<path d="M2 19l7-11 4 6 2-3 7 8z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 12l1.3 1.7L12 11" stroke="currentColor" stroke-width="1.1" fill="none" stroke-linejoin="round"/>',
         cactus: '<path d="M12 21V9a2 2 0 1 1 4 0v2M12 13H9a2 2 0 0 1-2-2V8M12 21H9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17" cy="6" r="1.6" fill="currentColor"/>',
-        wave: '<path d="M2 10c2-2 4-2 6 0s4 2 6 0 4-2 6 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M2 15c2-2 4-2 6 0s4 2 6 0 4-2 6 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>'
+        wave: '<path d="M2 10c2-2 4-2 6 0s4 2 6 0 4-2 6 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M2 15c2-2 4-2 6 0s4 2 6 0 4-2 6 0" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+        stamp: '<path d="M5 5h14v14H5z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2 1.6"/><path d="M9 13l2 2 4-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>'
       }[name] || "";
       return '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' + body + '</svg>';
     }
@@ -628,7 +517,7 @@
     REGIONS.forEach(function (r) {
       var item = document.createElement("span");
       item.className = "legend-item";
-      item.innerHTML = '<span class="legend-dot" style="background:' + r.color + '"></span>' + r.label;
+      item.innerHTML = '<span class="legend-dot" style="background:var(' + r.varName + ')"></span>' + r.label;
       legendEl.appendChild(item);
     });
 
@@ -700,7 +589,7 @@
         streak++;
         mastery[current.abbr] = masteryCount(current.abbr) + 1;
         feedbackStamp.className = "feedback-stamp show correct";
-        feedbackStamp.innerHTML = '<span class="stamp-text">&#127881; Correct!</span>' +
+        feedbackStamp.innerHTML = '<span class="stamp-text">Correct</span>' +
           '<p class="feedback-note">' + current.name + " &mdash; " + current.capital + "</p>";
       } else {
         streak = 0;
@@ -735,10 +624,10 @@
         var states = STATES.filter(function (s) { return s.region === region.key; });
         var block = document.createElement("div");
         block.className = "region-block";
+        block.style.setProperty("--region-color", "var(" + region.varName + ")");
 
         var head = document.createElement("div");
         head.className = "region-head";
-        head.style.background = region.color;
         head.innerHTML = icon(region.icon) + "<span>" + region.label + "</span>";
         block.appendChild(head);
 
@@ -749,11 +638,11 @@
           var card = document.createElement("div");
           card.className = "flip-card";
           card.dataset.abbr = s.abbr;
-          card.style.setProperty("--region-color", region.color);
+          card.style.setProperty("--region-color", "var(" + region.varName + ")");
           card.innerHTML =
             '<div class="flip-card-inner">' +
               '<button type="button" class="flip-face flip-front" aria-label="Reveal capital of ' + s.name + '">' +
-                (isMastered(s.abbr) ? '<span class="mastered-mark">&#11088;</span>' : "") +
+                (isMastered(s.abbr) ? '<span class="mastered-mark">' + icon("stamp") + '</span>' : "") +
                 '<span class="abbr">' + s.abbr + '</span>' +
                 '<span class="name">' + s.name + "</span>" +
                 icon(region.icon) +
@@ -789,7 +678,7 @@
         var abbr = card.dataset.abbr;
         var mark = card.querySelector(".mastered-mark");
         if (isMastered(abbr) && !mark) {
-          card.querySelector(".flip-front").insertAdjacentHTML("afterbegin", '<span class="mastered-mark">&#11088;</span>');
+          card.querySelector(".flip-front").insertAdjacentHTML("afterbegin", '<span class="mastered-mark">' + icon("stamp") + '</span>');
         }
       });
     }
@@ -817,10 +706,10 @@
         btn.className = "us-tile" + (isMastered(s.abbr) ? " mastered" : "");
         btn.style.gridColumn = tile.col;
         btn.style.gridRow = tile.row;
-        btn.style.setProperty("--tile-color", region.color);
+        btn.style.setProperty("--tile-color", "var(" + region.varName + ")");
         btn.setAttribute("aria-label", s.name + ", capital " + s.capital);
         btn.dataset.abbr = s.abbr;
-        btn.innerHTML = s.abbr + (isMastered(s.abbr) ? '<span class="star">&#11088;</span>' : "");
+        btn.innerHTML = s.abbr + (isMastered(s.abbr) ? '<span class="mark">' + icon("stamp") + '</span>' : "");
         btn.addEventListener("click", function () { goToStateOnMap(s.abbr); });
         usMap.appendChild(btn);
       });
@@ -832,8 +721,8 @@
         var abbr = tile.dataset.abbr;
         var mastered = isMastered(abbr);
         tile.classList.toggle("mastered", mastered);
-        if (mastered && !tile.querySelector(".star")) {
-          tile.insertAdjacentHTML("beforeend", '<span class="star">&#11088;</span>');
+        if (mastered && !tile.querySelector(".mark")) {
+          tile.insertAdjacentHTML("beforeend", '<span class="mark">' + icon("stamp") + '</span>');
         }
       });
     }
