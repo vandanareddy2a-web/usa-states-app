@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+
+Sitemap: https://usa-states-re4o.onrender.com/sitemap.xml
